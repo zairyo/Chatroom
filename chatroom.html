@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <script src='/socket.io/socket.io.js'></script>
+	<script>
+		var socket=io.connect(null),
+			sid,
+			user='';
+		  
+	    var cookies=document.cookie;
+		var arr=cookies.split(';');
+		for (var i in arr){
+			var s_arr=arr[i].split('=');
+			if (s_arr[0]=='sid'){
+				sid=s_arr[1];
+			};
+		}; 
+		
+		socket.emit('load_finish',sid,function(data){
+			user=data;
+		});
+	  
+		socket.on('msg',function(data){
+			switch(data.type){
+			case 'user':
+				document.getElementById('panel').innerHTML+=data.msgs;
+				break;
+			case 'list':
+				document.getElementById('ulist').innerHTML=data.msgs;
+			};
+		});			
+			
+		function sendmsg(){
+			var msg=document.getElementById('msg').value;
+			document.getElementById('msg').value='';
+			socket.emit('msg',{msgs:'<br/>'+user+' : '+msg,type:'user'});
+		};			
+	
+		function log_out(){
+			socket.emit('discon',user);
+		};			
+	  
+	
+	</script>
+	<style>
+      #panel,#ulist,#form,#text {border:1px solid #CCC;}
+	  #panel {overflow:auto;width:500px;height:400px;}
+	  #ulist {overflow:auto;width:100px;height:450px;position:absolute;left:520px;top:8px;}
+	  #form {padding:10px;width:480px;margin-top:10px;}
+	  #msg {padding:2px;width:360px;}
+  </style>
+  </head>
+  <body onunload='log_out()'>
+	<div id='panel'></div>
+    <div id='form'>
+      <input id='msg'  onkeypress='if(window.event.which==13){sendmsg()}' autocomplete='off'/>
+      <input id='send' type='button' value='Send' onclick='sendmsg()' />
+	  <input id='disconnect' type='button'  onclick='log_out()' value='log_out()'/>
+    </div>
+	<div id='ulist'></div>
+  </body>
+</html>

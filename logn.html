@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <script src='/socket.io/socket.io.js'></script>
+  </head>
+  <body>    
+  	<script>
+	
+		var socket=io.connect(null),
+			sid,
+			cookies=document.cookie;
+			
+		var arr=cookies.split(';');
+		for (var i in arr){
+			var s_arr=arr[i].split('=');
+			if (s_arr[0]=='sid'){
+				sid=s_arr[1];
+				socket.emit('ssid',s_arr[1],function(data){
+					if(data==true){
+						window.location.href='/chatroom.html';
+					};
+				});
+				break;
+			};
+		};
+
+		
+		function log_in(){
+			var name=document.getElementById('user').value;
+				document.getElementById('user').value='';
+			if (name==''){
+				alert('You should input your name.');
+				return;
+			};
+			socket.emit('user',{names:name,ssid:sid},function(data){
+				if (data==false){
+					alert('It exists');
+					return;
+				}
+				else{
+					window.location.href='/chatroom.html';
+				};
+			});
+			return;
+		};
+		 	  
+	</script>
+    <h1>Chat room</h1>
+	<p>input your name</p>
+	<br/>
+	<input id='user' type='text'/> 
+	<input type='button' onclick='log_in()' value='log in'/>
+  </body>
+</html>
