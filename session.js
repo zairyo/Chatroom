@@ -10,11 +10,12 @@ function genSID(){
 };
 
 function create(SID){
-	session[SID]={
-		sid:(!SID)?genSID():SID,
+	var ssid=(!SID)?genSID():SID;
+	session[ssid]={
+		sid:ssid,
 		time:new Date().getTime()
 	};
-	return session[SID];
+	return session[ssid];
 };
 
 function clean(){
@@ -28,12 +29,7 @@ function clean(){
 };
 
 function get(sid){
-   //console.log('wait me');
 	return session[sid];
-};
-
-function update(sid){
-	session[sid].time=new Date().getTime();
 };
 
 function del(sid){
@@ -41,7 +37,6 @@ function del(sid){
 };
 
 function set(sid,key,value){
-    update(sid);
 	session[sid][key]=value;
 };
 
@@ -57,7 +52,6 @@ function judge(sid){
 exports.create=create;
 exports.get=get;
 exports.clean=clean;
-exports.update=update;
 exports.del=del;
 exports.set=set;
 exports.judge=judge;

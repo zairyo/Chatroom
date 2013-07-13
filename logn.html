@@ -14,11 +14,6 @@
 			var s_arr=arr[i].split('=');
 			if (s_arr[0]=='sid'){
 				sid=s_arr[1];
-				socket.emit('ssid',s_arr[1],function(data){
-					if(data==true){
-						window.location.href='/chatroom.html';
-					};
-				});
 				break;
 			};
 		};

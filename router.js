@@ -34,16 +34,27 @@ function route(req,res,path){
 			
 			var cookies=querystring.parse(req.headers.cookie,';');
 			if (count(cookies)>0){
+				var s=cookies['sid']?cookies.sid:undefined;
+
+				console.log(s);
+
 				req.cookie=cookies;
-				if (typeof cookies['sid']!='undefinde'){
-					req.session=session.judge(cookies.sid)?session.get(cookies.sid):session.create(cookies.sid);
+				req.session=session.judge(s)?session.get(s):session.create(s);
+				res.setHeader('Set-Cookie','sid='+req.session.sid);
+
+				if(req.session.name&&(path=='/logn.html'||path=='/')){
+					fs.readFile(__dirname+'/chatroom.html',function(err,datas){
+						if (err){return Error(res)};
+						res.writeHead(200,{'Content-Type':'text/html'});
+						res.write(datas,'utf8');
+						res.end();
+					})
+					return;
 				}
-				else{
-					req.session=session.create();
-					res.setHeader('Set-Cookie','sid='+req.session.sid);
-				}
+
 			}
 			else{
+				console.log('no cookie');
 				req.session=session.create()
 				res.setHeader('Set-cookie','sid='+req.session.sid);
 			};

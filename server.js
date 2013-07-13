@@ -18,24 +18,9 @@ sio=io.listen(server);
 
 sio.sockets.on('connection',function(socket){
 	
-	socket.on('ssid',function(sid,callback){
-		var _session=session.get(sid);
-		if (typeof _session['name']=='undefined'){
-			callback(false);
-		}
-		else{
-			session.update(_session['sid']);
-			callback(true);
-			count=users.push(_session['name']);
-			console.log(_session.name+' connect!');
-		};
-	});
-	
-			
-
 	socket.on('user',function(data,callback){
 		for (var i in users){
-			if (data.names=users[i]){
+			if (data.names==users[i]){
 				callback(false);
 				return;
 			};
@@ -55,11 +40,22 @@ sio.sockets.on('connection',function(socket){
 	};
 	
 	socket.on('load_finish',function(sid,callback){
-		var _session=session.get(sid);
+		var _session=session.get(sid),
+			judgement=false;
 		callback(_session.name);
+
+		for(var i in users){
+			if(users[i]==_session.name){judgement=true}
+		}
+		if (judgement==false){
+			console.log(_session.name+' connect!');
+			count=users.push(_session.name);
+		}
+
 		socket.broadcast.emit('msg',{msgs:'<br/>'+_session.name+' enters the room!',
 									 type:'user'
 									 });
+
 		sio.sockets.emit('msg',{msgs:ulist(),type:'list'});
 	});
 	
