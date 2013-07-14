@@ -36,11 +36,14 @@
 		};			
 	
 		function log_out(){
-			socket.emit('discon',user);
+			socket.emit('discon',{name:user,actions:'switch',sid:sid});
 			window.location.href='/logn.html'
 		};			
-	  
-	
+
+		function quit(){
+			socket.emit('discon',{name:user,actions:'quit',sid:sid});	
+		}
+
 	</script>
 	<style>
       #panel,#ulist,#form,#text {border:1px solid #CCC;}
@@ -50,12 +53,12 @@
 	  #msg {padding:2px;width:360px;}
   </style>
   </head>
-  <body onunload='log_out()'>
+  <body onunload='quit()'>
 	<div id='panel'></div>
     <div id='form'>
-      <input id='msg'  onkeypress='if(window.event.which==13){sendmsg()}' autocomplete='off'/>
+      <input id='msg'  onkeypress='if(window.event.which==13){sendmsg()}' autocomplete='off' />
       <input id='send' type='button' value='Send' onclick='sendmsg()' />
-	  <input id='disconnect' type='button'  onclick='log_out()' value='log_out()'/>
+	  <input id='disconnect' type='button'  onclick='log_out()' value='log out' />
     </div>
 	<div id='ulist'></div>
   </body>

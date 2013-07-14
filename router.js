@@ -15,9 +15,11 @@ function route(req,res,path){
 		cookies=querystring.parse(req.headers.cookie,';');
 
 		if (pathName[path]){
-			req.path=pathName[path]?pathName[path]:('.'+path);
+			req.path=pathName[path];
 			req.cookie=cookies;
+			console.log(req.cookie);
 			req.session=session.judge(cookies['sid'])?session.get(cookies['sid']):session.create(cookies['sid']);
+			console.log(req.session);
 			handler.handle(req,res,Ext,0)}
 		else{
 			req.path='.'+path;

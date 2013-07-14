@@ -18,11 +18,11 @@ function gethead(req,res,Ext,callback){
 
 function handle(req,res,Ext,type){
 	if (type==0){
-		req.path=req.session.name?req.path:'./logn.html';
+		req.path=req.session.name?'./chatroom.html':'./logn.html';
 	}
 	gethead(req,res,Ext,function(head){
 		fs.readFile(req.path,function(err,data){
-			if(err){return Error(err)}
+			if(err){return;}
 			res.writeHead(200,{'Content-Type':head.mime,
 							   'Content-Length':head.sizes,
 							   'Set-Cookie':'sid='+req.session.sid

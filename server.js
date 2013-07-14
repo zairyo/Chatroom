@@ -3,7 +3,7 @@ var http=require('http'),
 	io=require('socket.io'),
 	session=require('./session'),
 	router=require('./router'),
-	users=new Array,
+	users=new Array(),
 	count,
 	sio;
 	
@@ -52,9 +52,7 @@ sio.sockets.on('connection',function(socket){
 			count=users.push(_session.name);
 		}
 
-		socket.broadcast.emit('msg',{msgs:'<br/>'+_session.name+' enters the room!',
-									 type:'user'
-									 });
+		socket.broadcast.emit('msg',{msgs:'<br/>'+_session.name+' enters the room!', type:'user'});
 
 		sio.sockets.emit('msg',{msgs:ulist(),type:'list'});
 	});
@@ -64,14 +62,15 @@ sio.sockets.on('connection',function(socket){
 	});
 	
 	socket.on('discon',function(data){
-		console.log(data+' disconnect!');
-		socket.broadcast.emit('msg',{msgs:'<br/>'+data+' leave.',type:'user'});
+		console.log(data.name+' disconnect!');
+		socket.broadcast.emit('msg',{msgs:'<br/>'+data.name+' leave.',type:'user'});
 		for (var i in users){
-			if (users[i]==data){
+			if (users[i]==data.name){
 				users.splice(i,1);
 				break;
 			};
 		};
 		sio.sockets.emit('msg',{msgs:ulist(),type:'list'});
+		if (data.actions=='switch'){console.log('delete');session.del(data.sid);}
 	});
 });

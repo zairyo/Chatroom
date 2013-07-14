@@ -44,7 +44,7 @@
 	<p>input your name</p>
 	<br/>
 	<form id='sub'>
-	<input id='user' type='text'/> 
+	<input id='user' type='text'/ onkeypress='if(window.event.which==13){log_in();}'> 
 	<input type='button' onclick='log_in()' value='log in'/>
   </body>
 </html>
