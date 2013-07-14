@@ -20,8 +20,9 @@
 
 		
 		function log_in(){
-			var name=document.getElementById('user').value;
-				document.getElementById('user').value='';
+			var name=document.getElementById('user').value,
+				sub=document.getElementById('sub');
+			document.getElementById('user').value='';
 			if (name==''){
 				alert('You should input your name.');
 				return;
@@ -42,6 +43,7 @@
     <h1>Chat room</h1>
 	<p>input your name</p>
 	<br/>
+	<form id='sub'>
 	<input id='user' type='text'/> 
 	<input type='button' onclick='log_in()' value='log in'/>
   </body>
